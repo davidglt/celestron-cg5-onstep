@@ -240,6 +240,39 @@ This mount is dedicated to solar use — no star alignment is needed or possible
 | INDI OnStep (`indi_lx200_OnStep`) | Mount driver — port `/dev/ttyUSB0`, 9600 baud |
 | OnStep Android app | Bluetooth remote control |
 
+### KStars / Ekos Setup
+
+#### Observatory Location
+
+| Field | Value |
+|---|---|
+| **Name** | Valdemorillo |
+| **Country** | Spain |
+| **Longitude** | -4° 04' 48" (4.0800° W) |
+| **Latitude** | 40° 29' 24" (40.4900° N) |
+| **Elevation** | 920 m |
+| **Timezone** | Europe/Madrid (UTC+1 / UTC+2 DST) |
+
+#### Ekos Solar Profile
+
+| Category | Driver | Device |
+|---|---|---|
+| **Telescopes** | LX200 OnStep | Celestron CG-5 mount |
+| **CCDs** | ZWO CCD | ZWO ASI 174MM |
+| **Focusers** | ZWO EAF | ZWO EAF (Lunt LS60MT) |
+| Guider | — | Not used (solar setup) |
+
+> The ZWO CCD driver handles the ASI 174MM automatically when connected via USB.
+> No autoguiding is needed for daytime solar observation.
+
+#### INDI Connection
+
+| Parameter | Value |
+|---|---|
+| **Driver** | LX200 OnStep |
+| **Port** | `/dev/ttyUSB0` |
+| **Baud rate** | 9600 |
+
 ## Repository Structure
 
 ```
@@ -268,6 +301,7 @@ sessions/
 ✅ Firmware compiled and flashed (2026-08-31) — OnStep responding on `/dev/ttyUSB0` at 9600 baud.  
 ✅ Both axes (RA + DEC) moving correctly at all speeds (2026-08-31).  
 ✅ Bluetooth connected — OnStep Android app controlling both axes (2026-08-31).  
+✅ KStars + Ekos configured — Ekos solar profile set up (2026-08-31).  
 🔧 DEC travel limits pending measurement and Config.h update.  
 🔧 Solar sync and GoTo Sun workflow pending first light test.
 
