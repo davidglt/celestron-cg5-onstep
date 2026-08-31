@@ -25,6 +25,22 @@ This repository documents the mechanical, electrical, and software setup of a ma
 | Motor Shield | Arduino CNC Shield V3 | LV8729 drivers |
 | Host computer | Raspberry Pi 4 | Astroberry |
 
+### Weather Sensor
+
+| Component | Model | Notes |
+|---|---|---|
+| Sensor | BME280 | GY-BMEP 4-pin module, I2C address `0x76` |
+| Connection | I2C bus | Shared with DS3231 RTC |
+| Config.h | `WEATHER BME280_0x76` | Default `BME280` uses `0x77` — must use `BME280_0x76` for this module |
+
+OnStep reads temperature, pressure and humidity via LX200 commands:
+
+| Command | Data |
+|---|---|
+| `:GX9A#` | Temperature (°C) |
+| `:GX9B#` | Pressure (hPa) |
+| `:GX9C#` | Humidity (%) |
+
 ### Stepper Motors
 
 | Parameter | Value |
@@ -112,6 +128,7 @@ steps/degree = motor_steps × microsteps × pulley_ratio × worm_ratio / 360
 | **AXIS1_STEPS_PER_WORMROT** | 38400 |
 | **Driver model** | LV8729 |
 | **Microsteps** | 32 |
+| **WEATHER** | `BME280_0x76` (GY-BMEP module, I2C address 0x76) |
 | **Config.h** | See `firmware/Config.h` |
 
 ### DEC Travel Limits
@@ -213,6 +230,9 @@ Useful diagnostic commands:
 | `:GT#` | Get current tracking rate |
 | `:hF#` | Set home position |
 | `:Q#` | Stop all |
+| `:GX9A#` | Weather: temperature (°C) |
+| `:GX9B#` | Weather: pressure (hPa) |
+| `:GX9C#` | Weather: humidity (%) |
 
 `:GU#` status flags:
 
@@ -340,6 +360,7 @@ sessions/
 ✅ Bluetooth connected — OnStep Android app controlling both axes (2026-08-31).  
 ✅ KStars + Ekos configured — Ekos solar profile set up (2026-08-31).  
 ✅ DEC limits set to -90°/+90° via EEPROM override (2026-08-31) — no mechanical restriction confirmed.  
+✅ BME280 weather sensor reading real data (2026-08-31) — I2C `0x76`, `WEATHER BME280_0x76` in Config.h.  
 🔧 Solar sync and GoTo Sun workflow pending first light test.
 
 ## References
