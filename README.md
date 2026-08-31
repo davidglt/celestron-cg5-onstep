@@ -15,7 +15,7 @@ This repository documents the mechanical, electrical, and software setup of a ma
 | Mount | Celestron CG-5 | Manual German equatorial — non-motorized original |
 | GOTO Controller | OnStep | ESP32 WeMos D1 R32 (Espduino-32) |
 | Motor Shield | Arduino CNC Shield V3 | LV8729 drivers |
-| Host computer | Raspberry Pi 4 | Freshly installed |
+| Host computer | Raspberry Pi 4 | Astroberry |
 
 ### Stepper Motors
 
@@ -73,7 +73,7 @@ steps/degree = motor_steps × microsteps × pulley_ratio × worm_ratio / 360
 
 | Parameter | Value |
 |---|---|
-| **OnStep version** | 4.24m (backup Config.h) |
+| **OnStep version** | 4.24m |
 | **PINMAP** | CNC3 |
 | **Baud rate** | 9600 |
 | **Bluetooth** | ON (ESP32) — device name "OnStep" |
@@ -82,15 +82,110 @@ steps/degree = motor_steps × microsteps × pulley_ratio × worm_ratio / 360
 | **AXIS1_STEPS_PER_WORMROT** | 38400 |
 | **Driver model** | LV8729 |
 | **Microsteps** | 32 |
-| **Config.h** | See `firmware/Config.h` (to be moved) |
+| **Config.h** | See `firmware/Config.h` |
+
+### Build environment
+
+| Component | Version |
+|---|---|
+| arduino-cli | — |
+| esp32:esp32 platform | 2.0.17 |
+| FQBN | `esp32:esp32:d1_mini32` |
+| BluetoothSerial | 2.0.0 |
+| Rtc by Makuna | 2.5.0 |
+| Adafruit BME280 | 2.3.0 |
+| Adafruit BusIO | 1.17.4 |
+| Adafruit Unified Sensor | 1.1.15 |
+
+### Known build issue: `tone()` duplicate default argument
+
+With `esp32:esp32` 2.0.17, compilation fails with:
+
+```
+src/HAL/ESP32/Analog.h:54: error: default argument given for parameter 3 of 'void tone(...)' [-fpermissive]
+```
+
+**Fix** — remove the duplicate default argument from `Analog.h`:
+
+```bash
+python3 -c "
+with open('/home/astroberry/OnStep/src/HAL/ESP32/Analog.h', 'r') as f:
+    content = f.read()
+content = content.replace(
+    'void tone(uint8_t pin, unsigned int frequency, unsigned long duration = 0)',
+    'void tone(uint8_t pin, unsigned int frequency, unsigned long duration)'
+)
+with open('/home/astroberry/OnStep/src/HAL/ESP32/Analog.h', 'w') as f:
+    f.write(content)
+print('Done')
+"
+```
+
+Verify:
+```bash
+grep "weak.*tone" ~/OnStep/src/HAL/ESP32/Analog.h
+# Must show the line WITHOUT '= 0'
+```
+
+### Compile & flash
+
+```bash
+# Compile
+arduino-cli compile --fqbn esp32:esp32:d1_mini32 ~/OnStep
+
+# Flash
+arduino-cli upload --fqbn esp32:esp32:d1_mini32 --port /dev/ttyUSB0 ~/OnStep
+```
+
+Expected output:
+```
+Sketch uses 1226173 bytes (93%) of program storage space.
+Global variables use 45428 bytes (13%) of dynamic memory.
+Wrote 1232752 bytes (783950 compressed) at 0x00010000 in 11.3 seconds
+Hash of data verified.
+```
+
+### Verify communication (LX200)
+
+OnStep does not stream text — it responds to LX200 commands terminated with `#`.
+
+```bash
+echo -e ":GVP#" | socat - /dev/ttyUSB0,b9600,raw,echo=0,crnl
+# Expected response: On-Step
+```
+
+Useful diagnostic commands:
+
+| Command | Response |
+|---|---|
+| `:GVP#` | Product name (`On-Step`) |
+| `:GU#` | System status flags |
+| `:GC#` | Current date |
+| `:GL#` | Local time |
+| `:Gg#` | Longitude |
+| `:Gt#` | Latitude |
+| `:Te#` | Enable motors |
+| `:Mw#` | Move RA (guide speed) |
+| `:Q#` | Stop all |
+
+`:GU#` status flags:
+
+| Flag | Meaning |
+|---|---|
+| `N` | Motors enabled |
+| `n` | Motors disabled |
+| `H` | At home |
+| `P` | Parking |
+| `I` | Not initialized |
+| `G` | GoTo in progress |
 
 ## Software
 
 | Software | Role |
 |---|---|
-| Raspberry Pi OS | Host OS (freshly installed) |
+| Astroberry (Raspberry Pi OS) | Host OS |
 | KStars + Ekos | Planetarium and imaging sequencer |
-| INDI OnStep | Mount driver |
+| INDI OnStep (`indi_lx200_OnStep`) | Mount driver — port `/dev/ttyUSB0`, 9600 baud |
 
 ## Repository Structure
 
@@ -117,7 +212,8 @@ sessions/
 
 ## Status
 
-🔧 Currently in commissioning phase — firmware to be compiled and flashed.
+✅ Firmware compiled and flashed (2026-08-31) — OnStep responding on `/dev/ttyUSB0` at 9600 baud.  
+🔧 Motors not yet connected — driver installation and INDI commissioning pending.
 
 ## References
 
