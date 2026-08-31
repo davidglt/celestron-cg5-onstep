@@ -114,6 +114,17 @@ steps/degree = motor_steps × microsteps × pulley_ratio × worm_ratio / 360
 | **Microsteps** | 32 |
 | **Config.h** | See `firmware/Config.h` |
 
+### DEC Travel Limits
+
+Measured physically by moving each axis until the GT2 belt skipped (2026-08-31):
+
+| Direction | Physical limit (first belt skip) | Config.h limit (5° safety margin) |
+|---|---|---|
+| **Norte (Max)** | ~48° | **53°** (`AXIS2_LIMIT_MAX`) |
+| **Sur (Min)** | ~34° | **39°** (`AXIS2_LIMIT_MIN`) |
+
+> Belt tension was adjusted during calibration — too tight causes cyclic skipping every full worm rotation.
+
 ### Build environment
 
 | Component | Version |
@@ -302,7 +313,7 @@ sessions/
 ✅ Both axes (RA + DEC) moving correctly at all speeds (2026-08-31).  
 ✅ Bluetooth connected — OnStep Android app controlling both axes (2026-08-31).  
 ✅ KStars + Ekos configured — Ekos solar profile set up (2026-08-31).  
-🔧 DEC travel limits pending measurement and Config.h update.  
+✅ DEC travel limits measured and set in Config.h (2026-08-31) — Norte 53°, Sur 39°.  
 🔧 Solar sync and GoTo Sun workflow pending first light test.
 
 ## References
