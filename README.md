@@ -116,14 +116,14 @@ steps/degree = motor_steps × microsteps × pulley_ratio × worm_ratio / 360
 
 ### DEC Travel Limits
 
-Measured physically by moving each axis until the GT2 belt skipped (2026-08-31):
+The CG-5 has **no mechanical DEC restriction** — the belt skip observed during testing was caused by the counterweight without the tube (severe imbalance), not a physical stop. Config.h uses full range defaults:
 
-| Direction | Physical limit (first belt skip) | Config.h limit (5° safety margin) |
-|---|---|---|
-| **Norte (Max)** | ~48° | **53°** (`AXIS2_LIMIT_MAX`) |
-| **Sur (Min)** | ~34° | **39°** (`AXIS2_LIMIT_MIN`) |
+```cpp
+#define AXIS2_LIMIT_MIN    -90   // Full south range
+#define AXIS2_LIMIT_MAX     90   // Full north range
+```
 
-> Belt tension was adjusted during calibration — too tight causes cyclic skipping every full worm rotation.
+> ⚠️ OnStep stores limits in EEPROM and ignores Config.h if EEPROM values exist. After flashing, override EEPROM limits via LX200 commands (see below).
 
 ### Build environment
 
@@ -225,6 +225,32 @@ Useful diagnostic commands:
 | `I` | Not initialized |
 | `G` | GoTo in progress |
 
+### EEPROM limit overrides
+
+OnStep stores axis limits in EEPROM and ignores Config.h if EEPROM values already exist. After a fresh flash, force the correct DEC limits with:
+
+```bash
+# Set DEC min = -90°
+echo -e ":SXE9,-90#" | socat - /dev/ttyUSB0,b9600,raw,echo=0,crnl
+# → 1 (success)
+
+# Set DEC max = +90°
+echo -e ":SXEa,90#" | socat - /dev/ttyUSB0,b9600,raw,echo=0,crnl
+# → 1 (success)
+```
+
+Verify the values were applied:
+
+```bash
+echo -e ":GXE9#" | socat - /dev/ttyUSB0,b9600,raw,echo=0,crnl
+# → -90
+
+echo -e ":GXEa#" | socat - /dev/ttyUSB0,b9600,raw,echo=0,crnl
+# → 90
+```
+
+> Note: `:Gh#` and `:Go#` return the **altitude** limits (horizon and overhead), not DEC limits.
+
 ### Solar observation workflow
 
 This mount is dedicated to solar use — no star alignment is needed or possible during the day.
@@ -313,7 +339,7 @@ sessions/
 ✅ Both axes (RA + DEC) moving correctly at all speeds (2026-08-31).  
 ✅ Bluetooth connected — OnStep Android app controlling both axes (2026-08-31).  
 ✅ KStars + Ekos configured — Ekos solar profile set up (2026-08-31).  
-✅ DEC travel limits measured and set in Config.h (2026-08-31) — Norte 53°, Sur 39°.  
+✅ DEC limits set to -90°/+90° via EEPROM override (2026-08-31) — no mechanical restriction confirmed.  
 🔧 Solar sync and GoTo Sun workflow pending first light test.
 
 ## References
