@@ -38,17 +38,23 @@ This repository documents the mechanical, electrical, and software setup of a ma
 | Parameter | Value |
 |---|---|
 | **Driver** | LV8729 (confirmed — chip marking: LV8729 1TN0) |
-| **Vref AR (Axis1 / socket Y)** | 0.702 V |
-| **Vref DEC (Axis2 / socket A)** | 0.705 V |
+| **Vref AR (Axis1 / socket X)** | 0.702 V |
+| **Vref DEC (Axis2 / socket Y)** | 0.705 V |
 | **Imax per driver** | ~1.41 A (70% of rated 2.0A) |
 | **Microstepping** | 32x (M0/M1/M2 jumpers) |
 
 ### CNC Shield Socket Assignment
 
-| CNC Shield socket | OnStep Axis | Motor |
-|---|---|---|
-| Y (fila trasera, derecha) | Axis1 | AR (Ascensión Recta) |
-| A (fila delantera, derecha) | Axis2 | DEC (Declinación) |
+Verified from `src/pinmaps/Pins.CNC3.h` (STEP/DIR GPIO mapping):
+
+| CNC Shield socket | GPIO STEP | GPIO DIR | OnStep Axis | Motor |
+|---|---|---|---|---|
+| **X** | 26 | 16 | Axis1 | AR (Ascensión Recta) |
+| **Y** | 25 | 27 | Axis2 | DEC (Declinación) |
+| Z | 19 | 14 | Axis3 | No usado |
+| A | 17 | 14 | Axis4 | No usado |
+
+> Only sockets **X** and **Y** are used for the CG-5 conversion.
 
 ### Mechanical
 
