@@ -83,6 +83,22 @@ steps/degree = motor_steps × microsteps × pulley_ratio × worm_ratio / 360
              = 15360 steps/degree  ✅ (matches Config.h)
 ```
 
+## Power Connection Order
+
+> ⚠️ Never connect or disconnect motors while 12V is powered — this can damage the LV8729 drivers.
+
+### Power On
+
+1. Verify motors are connected to the CNC shield
+2. Connect **USB** to the ESP32 (powers logic)
+3. Connect **12V** to the CNC shield (powers drivers and motors)
+
+### Power Off (reverse order)
+
+1. Disconnect **12V** from the CNC shield
+2. Disconnect **USB** from the ESP32
+3. Motors can remain connected
+
 ## Firmware
 
 | Parameter | Value |
@@ -252,6 +268,7 @@ sessions/
 ✅ Firmware compiled and flashed (2026-08-31) — OnStep responding on `/dev/ttyUSB0` at 9600 baud.  
 ✅ Both axes (RA + DEC) moving correctly at all speeds (2026-08-31).  
 ✅ Bluetooth connected — OnStep Android app controlling both axes (2026-08-31).  
+🔧 DEC travel limits pending measurement and Config.h update.  
 🔧 Solar sync and GoTo Sun workflow pending first light test.
 
 ## References
