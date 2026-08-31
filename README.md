@@ -38,7 +38,7 @@ This repository documents the mechanical, electrical, and software setup of a ma
 | Parameter | Value |
 |---|---|
 | **Driver** | LV8729 (confirmed — chip marking: LV8729 1TN0) |
-| **Vref AR (Axis1 / socket X)** | 0.702 V |
+| **Vref RA (Axis1 / socket X)** | 0.702 V |
 | **Vref DEC (Axis2 / socket Y)** | 0.705 V |
 | **Imax per driver** | ~1.41 A (70% of rated 2.0A) |
 | **Microstepping** | 32x (M0/M1/M2 jumpers) |
@@ -49,10 +49,10 @@ Verified from `src/pinmaps/Pins.CNC3.h` (STEP/DIR GPIO mapping):
 
 | CNC Shield socket | GPIO STEP | GPIO DIR | OnStep Axis | Motor |
 |---|---|---|---|---|
-| **X** | 26 | 16 | Axis1 | AR (Ascensión Recta) |
-| **Y** | 25 | 27 | Axis2 | DEC (Declinación) |
-| Z | 19 | 14 | Axis3 | No usado |
-| A | 17 | 14 | Axis4 | No usado |
+| **X** | 26 | 16 | Axis1 | RA (Right Ascension) |
+| **Y** | 25 | 27 | Axis2 | DEC (Declination) |
+| Z | 19 | 14 | Axis3 | Not used |
+| A | 17 | 14 | Axis4 | Not used |
 
 > Only sockets **X** and **Y** are used for the CG-5 conversion.
 
@@ -60,7 +60,7 @@ Verified from `src/pinmaps/Pins.CNC3.h` (STEP/DIR GPIO mapping):
 
 | Parameter | Value |
 |---|---|
-| **Worm gear ratio AR** | 144:1 (CG-5 standard) |
+| **Worm gear ratio RA** | 144:1 (CG-5 standard) |
 | **Worm gear ratio DEC** | 144:1 (CG-5 standard) |
 | **Motor pulley teeth** | 20 |
 | **Axis pulley teeth** | 60 |
