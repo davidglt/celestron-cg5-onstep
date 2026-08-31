@@ -171,7 +171,9 @@ Useful diagnostic commands:
 | `:Gg#` | Longitude |
 | `:Gt#` | Latitude |
 | `:Te#` | Enable motors |
-| `:Mw#` | Move RA (guide speed) |
+| `:RC2#:Mw#` | Move RA at 64x sidereal |
+| `:RS#:Mw#` | Move RA at slew speed (west) |
+| `:RS#:Mn#` | Move DEC at slew speed (north) |
 | `:Q#` | Stop all |
 
 `:GU#` status flags:
@@ -219,7 +221,8 @@ sessions/
 ## Status
 
 ✅ Firmware compiled and flashed (2026-08-31) — OnStep responding on `/dev/ttyUSB0` at 9600 baud.  
-🔧 Motors not yet connected — driver installation and INDI commissioning pending.
+✅ Both axes (RA + DEC) moving correctly at all speeds (2026-08-31).  
+🔧 INDI commissioning and star alignment pending.
 
 ## References
 
