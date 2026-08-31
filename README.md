@@ -1,6 +1,6 @@
 # Celestron CG-5 OnStep
 
-Documentation for a custom motorized conversion of a manual Celestron CG-5 German equatorial mount using OnStep.
+Documentation for a custom motorized conversion of a manual Celestron CG-5 German equatorial mount using OnStep. This setup is dedicated to **solar observation** with a Lunt LS60MT hydrogen-alpha telescope.
 
 ## Overview
 
@@ -8,11 +8,19 @@ This repository documents the mechanical, electrical, and software setup of a ma
 
 ## Hardware
 
+### Optical Train
+
+| Component | Model | Notes |
+|---|---|---|
+| Mount | Celestron CG-5 | Motorized with OnStep |
+| Telescope | Lunt LS60MT | 60mm H-alpha solar telescope |
+| Filter | Double-stack | Enhanced contrast for solar prominences and surface detail |
+| Camera | ZWO ASI 174MM | Monochrome, high-speed solar imaging |
+
 ### Controller
 
 | Component | Model | Notes |
 |---|---|---|
-| Mount | Celestron CG-5 | Manual German equatorial — non-motorized original |
 | GOTO Controller | OnStep | ESP32 WeMos D1 R32 (Espduino-32) |
 | Motor Shield | Arduino CNC Shield V3 | LV8729 drivers |
 | Host computer | Raspberry Pi 4 | Astroberry |
@@ -174,6 +182,9 @@ Useful diagnostic commands:
 | `:RC2#:Mw#` | Move RA at 64x sidereal |
 | `:RS#:Mw#` | Move RA at slew speed (west) |
 | `:RS#:Mn#` | Move DEC at slew speed (north) |
+| `:T0#` | Set solar tracking rate |
+| `:GT#` | Get current tracking rate |
+| `:hF#` | Set home position |
 | `:Q#` | Stop all |
 
 `:GU#` status flags:
@@ -187,6 +198,23 @@ Useful diagnostic commands:
 | `I` | Not initialized |
 | `G` | GoTo in progress |
 
+### Solar observation workflow
+
+This mount is dedicated to solar use — no star alignment is needed or possible during the day.
+
+1. **Polar align** — point RA axis to geographic north pole using compass + tilt equal to latitude (40°)
+2. **Set home position** — counterweight down, tube pointing north, then:
+   ```bash
+   echo -e ":hF#" | socat - /dev/ttyUSB0,b9600,raw,echo=0,crnl
+   ```
+3. **Point at the Sun manually** with solar filter installed on the Lunt LS60MT
+4. **Center the solar disk** and tap **Sync** in the OnStep app
+5. **Switch to solar tracking rate**:
+   ```bash
+   echo -e ":T0#" | socat - /dev/ttyUSB0,b9600,raw,echo=0,crnl
+   ```
+6. **GoTo Sun** works reliably after sync
+
 ## Software
 
 | Software | Role |
@@ -194,6 +222,7 @@ Useful diagnostic commands:
 | Astroberry (Raspberry Pi OS) | Host OS |
 | KStars + Ekos | Planetarium and imaging sequencer |
 | INDI OnStep (`indi_lx200_OnStep`) | Mount driver — port `/dev/ttyUSB0`, 9600 baud |
+| OnStep Android app | Bluetooth remote control |
 
 ## Repository Structure
 
@@ -222,12 +251,15 @@ sessions/
 
 ✅ Firmware compiled and flashed (2026-08-31) — OnStep responding on `/dev/ttyUSB0` at 9600 baud.  
 ✅ Both axes (RA + DEC) moving correctly at all speeds (2026-08-31).  
-🔧 INDI commissioning and star alignment pending.
+✅ Bluetooth connected — OnStep Android app controlling both axes (2026-08-31).  
+🔧 Solar sync and GoTo Sun workflow pending first light test.
 
 ## References
 
 - [OnStep GitHub](https://github.com/hjd1964/OnStep)
 - [OnStep Groups.io Wiki](https://onstep.groups.io/g/main/wiki)
 - [INDI OnStep driver](https://indilib.org)
+- [Lunt LS60MT](https://luntsolarsystems.com/product/ls60mt/)
+- [ZWO ASI 174MM](https://astronomy-imaging-camera.com/product/asi174mm)
 - [StepperOnline 17HM19-2004S](https://www.stepperonline.com/nema-17-bipolar-0-9deg-46ncm-65-1oz-in-2a-42x42x48mm-4-wires-17hm19-2004s)
 - [LV8729 Datasheet](https://www.lcsc.com/datasheet/lcsc_datasheet_2401121536_LVCHIP-Micro-LV8729_C2890789.pdf)
