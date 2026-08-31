@@ -153,10 +153,8 @@
 #define AXIS2_DRIVER_STATUS           OFF //    OFF, TMC_SPI, HIGH, or LOW.  Polling for driver status info/fault detection.  Option
 #define AXIS2_TANGENT_ARM             OFF //    OFF, ON +limit range below. Set cntr w/[Reset Home] Return cntr w/[Find Home] Infreq
 
-#define AXIS2_LIMIT_MIN                39 //    -90, n. Where n=-90..0 (degrees.) Minimum allowed declination.                Infreq
-                                          //         Measured physical limit (Sur): first belt skip at ~34°, 5° safety margin
-#define AXIS2_LIMIT_MAX                53 //     90, n. Where n=0..90 (degrees.) Maximum allowed declination.                 Infreq
-                                          //         Measured physical limit (Norte): first belt skip at ~48°, 5° safety margin
+#define AXIS2_LIMIT_MIN               -90 //    -90, n. Where n=-90..0 (degrees.) Minimum allowed declination.                Infreq
+#define AXIS2_LIMIT_MAX                90 //     90, n. Where n=0..90 (degrees.) Maximum allowed declination.                 Infreq
 
 // AXIS3 ROTATOR
 // see https://onstep.groups.io/g/main/wiki/Configuration-Rotator-and-Focusers#AXIS3
