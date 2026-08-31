@@ -44,7 +44,7 @@
 
 // SENSORS ----------------------------------------------- see https://onstep.groups.io/g/main/wiki/Configuration-Controller#SENSORS
 // * = also supports ON_PULLUP or ON_PULLDOWN to activate MCU internal resistors if present.
-#define WEATHER                    BME280 //    OFF, BME280 (I2C 0x77,) BME280_0x76, BME280_SPI (see pinmap for CS.)          Option
+#define WEATHER               BME280_0x76 //    OFF, BME280 (I2C 0x77,) BME280_0x76, BME280_SPI (see pinmap for CS.)          Option
                                           //         BMP280 (I2C 0x77,) BMP280_0x76, BMP280_SPI (see pinmap for CS.)
                                           //         BME280 or BMP280 for temperature, pressure.  BME280 for humidity also.
                                           
@@ -97,7 +97,7 @@
 #define MFLIP_PAUSE_HOME_MEMORY       OFF //    OFF, ON Remember meridian flip pause at home setting across power cycles.     Option
 #define MFLIP_AUTOMATIC_MEMORY        OFF //    OFF, ON Remember automatic meridian flip setting across power cycles.         Option
 
-#define PIER_SIDE_SYNC_CHANGE_SIDES   OFF //    OFF, ON Allows sync to change pier side, for GEM mounts.                      Option
+#define PIER_SIDE_SYNC_CHANGE_SIDES   OFF //    OFF, ON Allows sync to change pier side, for GEM mounts.                     Option
 #define PIER_SIDE_PREFERRED_DEFAULT  EAST //   BEST, Stays on current side if possible. EAST or WEST switch if possible.      Option
 
 // PARKING BEHAVIOUR ------------------------------------------ see https://onstep.groups.io/g/main/wiki/Configuration-Mount#PARKING
