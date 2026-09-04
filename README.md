@@ -32,9 +32,11 @@ The operational network interface is the integrated ESP32 Wi-Fi running with OnS
 
 An ESP-01/ESP8266 running SmartWebServer 2.10h may also advertise `OnStep-SWS`. It is not part of the currently selected network path. Do not use both web servers concurrently as mount-control channels.
 
-## Firmware configuration
+## Firmware
 
 The OnStep build configuration is stored in [firmware/Config.h](firmware/Config.h). Before changing firmware or attempting an OnStepX migration, preserve a known-working copy of this file and bench-test RA/DEC motion, axis direction, travel limits, tracking, and network connectivity.
+
+For a staged, reversible OnStepX test plan, see [OnStep 4.24s to OnStepX Migration Guide](docs/onstepx-migration.md).
 
 ## Operating notes
 
